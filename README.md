@@ -45,7 +45,7 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 
 ---
 
-# Aura contest details
+# Aura Finance contest details
 - $142,500 USDC main award pot
 - $7,500 USDC gas optimization award pot
 - Join [C4 Discord](https://discord.gg/code4rena) to register
