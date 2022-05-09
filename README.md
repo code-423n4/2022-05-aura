@@ -1,51 +1,5 @@
-# ✨ So you want to sponsor a contest
-
-This `README.md` contains a set of checklists for our contest collaboration.
-
-Your contest will use two repos: 
-- **a _contest_ repo** (this one), which is used for scoping your contest and for providing information to contestants (wardens)
-- **a _findings_ repo**, where issues are submitted. 
-
-Ultimately, when we launch the contest, this contest repo will be made public and will contain the smart contracts to be reviewed and all the information needed for contest participants. The findings repo will be made public after the contest is over and your team has mitigated the identified issues.
-
-Some of the checklists in this doc are for **C4 (🐺)** and some of them are for **you as the contest sponsor (⭐️)**.
-
----
-
-# Contest setup
-
-## ⭐️ Sponsor: Provide contest details
-
-Under "SPONSORS ADD INFO HERE" heading below, include the following:
-
-- [ ] Name of each contract and:
-  - [ ] source lines of code (excluding blank lines and comments) in each
-  - [ ] external contracts called in each
-  - [ ] libraries used in each
-- [ ] Describe any novel or unique curve logic or mathematical models implemented in the contracts
-- [ ] Does the token conform to the ERC-20 standard? In what specific ways does it differ?
-- [ ] Describe anything else that adds any special logic that makes your approach unique
-- [ ] Identify any areas of specific concern in reviewing the code
-- [ ] Add all of the code to this repo that you want reviewed
-- [ ] Create a PR to this repo with the above changes.
-
----
-
-# Contest prep
-
-## ⭐️ Sponsor: Contest prep
-- [ ] Make sure your code is thoroughly commented using the [NatSpec format](https://docs.soliditylang.org/en/v0.5.10/natspec-format.html#natspec-format).
-- [ ] Modify the bottom of this `README.md` file to describe how your code is supposed to work with links to any relevent documentation and any other criteria/details that the C4 Wardens should keep in mind when reviewing. ([Here's a well-constructed example.](https://github.com/code-423n4/2021-06-gro/blob/main/README.md))
-- [ ] Please have final versions of contracts and documentation added/updated in this repo **no less than 8 hours prior to contest start time.**
-- [ ] Ensure that you have access to the _findings_ repo where issues will be submitted.
-- [ ] Promote the contest on Twitter (optional: tag in relevant protocols, etc.)
-- [ ] Share it with your own communities (blog, Discord, Telegram, email newsletters, etc.)
-- [ ] Optional: pre-record a high-level overview of your protocol (not just specific smart contract functions). This saves wardens a lot of time wading through documentation.
-- [ ] Delete this checklist and all text above the line below when you're ready.
-
----
-
 # Aura Finance contest details
+
 - $142,500 USDC main award pot
 - $7,500 USDC gas optimization award pot
 - Join [C4 Discord](https://discord.gg/code4rena) to register
@@ -56,4 +10,42 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 
 This repo will be made public before the start of the contest. (C4 delete this line when made public)
 
-[ ⭐️ SPONSORS ADD INFO HERE ]
+## What is Aura
+
+Aura Finance is a protocol built on top of the Balancer system to provide maximum incentives to Balancer liquidity providers and BAL stakers (into veBAL) through social aggregation of BAL deposits and Aura’s native token.
+
+## Links
+
+- [Docs](https://docs.aura.finance/)
+- [Aura:Convex diff](https://github.com/aurafinance/convex-platform/pull/23/files?file-filters%5B%5D=.sol&show-viewed-files=true&show-deleted-files=false)
+- [Aura Lite Repo](https://github.com/aurafinance/aura-contracts-lite)
+
+## Repo
+
+Modified files from the Convex protocol are in the `convex-platform/` folder. This strategy has been taken to preserve the file formatting to make diff'ing the files easier
+
+Contracts that are core to the system and flow of user funds remain in the `convex-platform/` subdirectory, with the contracts in `contracts/` being either peripheral (AuraClaimZap, AuraStakingProxy, AuraVestedEscrow, CrvDepositorWrapper, ExtraRewardsDistributor), Aura Specific (Aura, AuraMinter) or those that required bigger changes (in the case of AuraLocker).
+
+original convex code -> new aura versions
+
+- `convex-platform/contracts/contracts/Cvx.sol` -> `contracts/Aura.sol`
+- `convex-platform/contracts/contracts/ClaimZap.sol` -> `contracts/AuraClaimZap.sol`
+- `convex-platform/contracts/contracts/CvxLocker.sol` -> `contracts/AuraLocker.sol`
+- `convex-platform/contracts/contracts/interfaces/BoringMath.sol` -> `contracts/AuraMath.sol`
+- `convex-platform/contracts/contracts/CvxStakingProxy.sol` -> `contracts/AuraStakingProxy.sol`
+- `convex-platform/contracts/contracts/VestedEscrow.sol` -> `contracts/AuraVestedEscrow.sol`
+- `convex-platform/contracts/contracts/vlCvxExtraRewardDistribution.sol` -> `contracts/ExtraRewardsDistributor.sol`
+
+## Diagrams
+
+### Aura Voting
+
+![Aura Voting](https://user-images.githubusercontent.com/97352567/167505092-07ddbd56-df97-4cd9-802f-d9387c21cf55.jpg)
+
+### Booster Pools
+
+![Booster Pools Rewards](https://user-images.githubusercontent.com/97352567/167505101-f1105826-c192-412c-adec-aeb0d64760e6.jpg)
+
+### auraBAL Rewards
+
+![Aura Rewards](https://user-images.githubusercontent.com/97352567/167505104-c785b31c-8afb-4a51-9281-d0151e7646be.jpg)
