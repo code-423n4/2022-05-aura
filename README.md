@@ -44,8 +44,9 @@ original convex code -> new aura versions
 
 ### Booster Pools
 
-![Booster Pools Rewards](https://user-images.githubusercontent.com/97352567/167505101-f1105826-c192-412c-adec-aeb0d64760e6.jpg)
+![Booster Pools Rewards (1)](https://user-images.githubusercontent.com/97352567/167617925-9012308b-9540-4302-8a5f-72a47729bad4.jpg)
 
 ### auraBAL Rewards
 
-![Aura Rewards](https://user-images.githubusercontent.com/97352567/167505104-c785b31c-8afb-4a51-9281-d0151e7646be.jpg)
+![Aura Rewards (1)](https://user-images.githubusercontent.com/97352567/167617939-fb22c171-5c3b-440a-8fdc-cde822f50306.jpg)
+
