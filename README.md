@@ -52,12 +52,12 @@ EIP-1271 method `verifySignature`.
 
 Balancer Pool Tokens (or BPTs) are received for depositing assets into a liquidity pool. These BPTs can be staked in Balancer Gauges to earn
 BAL rewards. Depositors are given a "boost" up to 2.5x based on their veBAL balance. To get a veBAL balance, users usually need to lock up
-BAL in the Balancer VotingEscrow. In the case of Aura the VoterProxy is the contract which deposits into the Balancer VotingEscrow and gauges.
+BAL in the Balancer VotingEscrow. In the case of Aura the VoterProxy is the contract which deposits into the Balancer gauges.
 
 Balancer pools are added to the Booster contract via the PoolManagerV3 contract. The PoolManager and PoolManagerProxy(s) perform some checks
-on the pool to ensure it is valid. Once added a BaseRewardPool and DepositToken are deployed. Users deposit BPT into the Booster for a target pool
+on the pool to ensure is is valid. Once added a BaseRewardPool and DepositToken are deployed. Users deposit BPT into the Booster for a target pools
 and recieve DepositToken's (auraBPT). They then stake these auraBPT token's in the BaseRewardPool in order to recieve a share of the rewards.
-Once deposited in the Booster the BPT is forwarded to the VoterProxy which then deposits them into their related gauge.
+Once deposited in the Booster the BPT is forwarded to the VoterProxy which then deposits then into their related gauge.
 
 Rewards can be harvested by any user by calling `earmarkRewards` and `earmarkFees` on the Booster contract for a specific pool. This then
 calls `claimCrv` (claims BAL), `claimRewards` (claims any additional reward tokens registered for the gauge) and `claimFees` (claims pool fees
@@ -88,3 +88,37 @@ to the original CvxLocker in order to support vote delegation. While vlAURA bala
 in future they will be the voting token for our on chain governance. The lock duration is 17 weeks and rewards a distributed in 1 week epochs.
 
 ![Aura Rewards](https://user-images.githubusercontent.com/97352567/167505104-c785b31c-8afb-4a51-9281-d0151e7646be.jpg)
+
+## Contracts Of Interest
+
+### AuraLocker.sol
+
+Allows for rolling 16 week lockups of AURA for vlAURA, and provides balances available at each epoch (1 week).
+Also receives auraBAL from `CvxStakingProxy` and redistributes. Major changes from CvxLocker implementation include addition
+of voting delegation.
+
+### Booster.sol
+
+Main deposit contract; keeps track of pool info & user deposits; distributes rewards. They say all paths lead to Rome,
+and the Booster is no different. This is where it all goes down. It is responsible for tracking all the pools, it
+collects rewards from all pools and redirects it. The Booster is owned by the BoosterOwner contract and pools are added by
+PoolMangerV3 via PoolManagerProxy(s). No major changes from Convex other than adding support for multiple fee distros.
+
+### VoterProxy.sol
+
+VoterProxy whitelisted in the Balancer SmartWalletWhitelist that participates in Balancer governance. Also handles all deposits
+into VotingEscrow and into the gauges. This is the address that has the voting power.
+
+### Aura.sol
+
+The Aura token. Ability to mint additional aura tokens after the inflation period has ended.
+
+### CrvDepositor.sol
+
+Deposit 80:20-BAL:ETH BPT and recieve auraBAL 1:1. BPT is sent to the VoterProxy and locked for the max amount of time in the Balancer
+VotingEscrow contract.
+
+### CrvDepositorWrapper.sol
+
+Deposit BAL and recieve auraBAL. This contracts adds single sided BAL liquidity to the 80:20-BAL:ETH pool to recieve BPT and then converts
+BPT to auraBAL via CrvDepositor.
