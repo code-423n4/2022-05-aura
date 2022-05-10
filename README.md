@@ -46,5 +46,6 @@ original convex code -> new aura versions
 
 ### auraBAL Rewards
 
-![Aura Rewards (1)](https://user-images.githubusercontent.com/97352567/167617939-fb22c171-5c3b-440a-8fdc-cde822f50306.jpg)
+![Aura Rewards (2)](https://user-images.githubusercontent.com/97352567/167655548-7e3b27c1-fad5-42ee-8796-12a7a013fe70.jpg)
+
 
