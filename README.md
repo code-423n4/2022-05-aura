@@ -22,7 +22,7 @@ Aura Finance is a protocol built on top of the Balancer system to provide maximu
 
 Modified files from the Convex protocol are in the `convex-platform/` folder. This strategy has been taken to preserve the file formatting to make diff'ing the files easier
 
-Contracts that are core to the system and flow of user funds remain in the `convex-platform/` subdirectory, with the contracts in `contracts/` being either peripheral (AuraClaimZap, AuraStakingProxy, AuraVestedEscrow, CrvDepositorWrapper, ExtraRewardsDistributor), Aura Specific (Aura, AuraMinter) or those that required bigger changes (in the case of AuraLocker).
+Contracts that are core to the system and flow of user funds remain in the `convex-platform/contracts` subdirectory, with the contracts in `contracts/` being either peripheral (AuraClaimZap, AuraStakingProxy, AuraVestedEscrow, CrvDepositorWrapper, ExtraRewardsDistributor), Aura Specific (Aura, AuraMinter) or those that required bigger changes (in the case of AuraLocker).
 
 original convex code -> new aura versions
 
