@@ -10,34 +10,38 @@
 
 ## What is Aura
 
-Aura Finance is a protocol built on top of the Balancer system to provide maximum incentives to Balancer liquidity providers and BAL stakers (into veBAL) through social aggregation of BAL deposits and Aura’s native token.
+Aura Finance is a protocol built on top of the Balancer system to provide maximum incentives to Balancer liquidity providers and BAL stakers (into veBAL) through social aggregation of BAL deposits and Aura’s native token. The Convex system has been adapted to be generic.
 
-Aura is a fork of the well known Convex system.
+Aura is a fork of the well known Convex system. Naming conventions and architecture from the original Convex system have been kept in Curve, so those familiar with their system or repo will have an easier time parsing the functionality.
 
 ## Links
 
+- [Aura Contracts Repo](https://github.com/aurafinance/aura-contracts-lite)
+- [Aura:Convex diff](https://github.com/aurafinance/convex-platform/pull/23/files?file-filters%5B%5D=.sol&show-viewed-files=true&show-deleted-files=true)
 - [Docs](https://docs.aura.finance/)
-- [Aura:Convex diff](https://github.com/aurafinance/convex-platform/pull/23/files?file-filters%5B%5D=.sol&show-viewed-files=true&show-deleted-files=false)
-- [Aura Lite Repo](https://github.com/aurafinance/aura-contracts-lite)
 - [Original Convex Docs](https://docs.convexfinance.com/convexfinance/)
 - [test output](./test-output.txt)
 - [fork test output](./fork-test-output.txt)
 
 ## Repo
 
-Modified files from the Convex protocol are in the `convex-platform/` folder. This strategy has been taken to preserve the file formatting to make diff'ing the files easier
+All files in `contracts` and `convex-platform/contracts` are included in this audit competition.
 
-Contracts that are core to the system and flow of user funds remain in the `convex-platform/contracts` subdirectory, with the contracts in `contracts/` being either peripheral (AuraClaimZap, AuraStakingProxy, AuraVestedEscrow, CrvDepositorWrapper, ExtraRewardsDistributor), Aura Specific (Aura, AuraMinter) or those that required bigger changes (in the case of AuraLocker).
+Contracts specific to Aura or those needing larger changes are in the `contracts`, and modified files from the Convex protocol are in the `convex-platform/` folder. This strategy has been taken to preserve the file formatting to make diff'ing the files easier (view [diff here](https://github.com/aurafinance/convex-platform/pull/23/files?file-filters%5B%5D=.sol&show-viewed-files=true&show-deleted-files=true)). Contracts that are core to the system and flow of user funds remain in the `convex-platform/contracts` subdirectory.
+
+Contracts in `contracts/` are either peripheral (AuraClaimZap, AuraStakingProxy, AuraVestedEscrow, CrvDepositorWrapper, ExtraRewardsDistributor), Aura Specific (Aura, AuraMinter, AuraBalRewardPool, AuraPenaltyForwarder) or those that required bigger changes (in the case of AuraLocker).
 
 original convex code -> new aura versions
 
-- `convex-platform/contracts/contracts/Cvx.sol` -> `contracts/Aura.sol`
-- `convex-platform/contracts/contracts/ClaimZap.sol` -> `contracts/AuraClaimZap.sol`
-- `convex-platform/contracts/contracts/CvxLocker.sol` -> `contracts/AuraLocker.sol`
-- `convex-platform/contracts/contracts/interfaces/BoringMath.sol` -> `contracts/AuraMath.sol`
-- `convex-platform/contracts/contracts/CvxStakingProxy.sol` -> `contracts/AuraStakingProxy.sol`
-- `convex-platform/contracts/contracts/VestedEscrow.sol` -> `contracts/AuraVestedEscrow.sol`
-- `convex-platform/contracts/contracts/vlCvxExtraRewardDistribution.sol` -> `contracts/ExtraRewardsDistributor.sol`
+- `convex-platform/.../Cvx.sol` -> `contracts/Aura.sol`
+- `convex-platform/.../BaseRewardPool.sol` -> `contracts/AuraBalRewardPool.sol`
+- `convex-platform/.../ClaimZap.sol` -> `contracts/AuraClaimZap.sol`
+- `convex-platform/.../CvxLocker.sol` -> `contracts/AuraLocker.sol`
+- `convex-platform/.../MerkleDrop.sol` -> `contracts/AuraMerkleDrop.sol`
+- `convex-platform/.../interfaces/BoringMath.sol` -> `contracts/AuraMath.sol`
+- `convex-platform/.../CvxStakingProxy.sol` -> `contracts/AuraStakingProxy.sol`
+- `convex-platform/.../VestedEscrow.sol` -> `contracts/AuraVestedEscrow.sol`
+- `convex-platform/.../vlCvxExtraRewardDistribution.sol` -> `contracts/ExtraRewardsDistributor.sol`
 
 Testing outputs can be found in `test-output.txt` and `fork-test-output.txt`
 
@@ -52,9 +56,9 @@ EIP-1271 method `verifySignature`.
 
 ![Aura Voting](https://user-images.githubusercontent.com/97352567/167505092-07ddbd56-df97-4cd9-802f-d9387c21cf55.jpg)
 
-### Booster Pools
+### Booster Pools (for liquidity providers)
 
-Balancer Pool Tokens (or BPTs) are received for depositing assets into a liquidity pool. These BPTs can be staked in Balancer Gauges to earn
+Balancer Pool Tokens (or BPTs) are received for depositing assets into a balancer liquidity pool. These BPTs can be staked in Balancer Gauges to earn
 BAL rewards. Depositors are given a "boost" up to 2.5x based on their veBAL balance. To get a veBAL balance, users usually need to lock up
 BAL in the Balancer VotingEscrow. In the case of Aura the VoterProxy is the contract which deposits into the Balancer gauges.
 
@@ -85,7 +89,7 @@ will swap BAL for the BPT by adding single sided liquidity to the 80/20 BAL/ETH 
 `earmarkRewards` and `earmarkFees` can be called on the Booster in the same way we describe above (Booster Pools) to distribute rewards
 to auraBAL stakers.
 
-#### AuraLocker
+### AuraLocker
 
 AURA tokens can be locked in the AuraLocker to recieve vlAURA. vlAURA is voting power in the AURA ecosystem. We have made some major changes
 to the original CvxLocker in order to support vote delegation. While vlAURA balances are currently only being used in the snapshot strategies
@@ -100,6 +104,16 @@ in future they will be the voting token for our on chain governance. The lock du
 Allows for rolling 16 week lockups of AURA for vlAURA, and provides balances available at each epoch (1 week).
 Also receives auraBAL from `CvxStakingProxy` and redistributes. Major changes from CvxLocker implementation include addition
 of voting delegation.
+
+### AuraBalRewardPool.sol
+
+This is a fork of BaseRewardPool that will have significant rewards during the first two weeks of the system. It will accept auraBAL deposits
+and then apply a penalty for those recipients who do not lock up in the AuraLocker. After this bootstrapping period, the incentives will continue natively
+to the system and users will need to migrate to the "lockRewards" BaseRewardPool.
+
+### AuraVestedEscrow.sol
+
+A vesting contract for all users. If the admin is 0, then the stream is immutable. All treasury and team vesting will happen through here.
 
 ### Booster.sol
 

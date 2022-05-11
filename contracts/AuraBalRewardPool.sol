@@ -11,6 +11,9 @@ import { IAuraLocker } from "./Interfaces.sol";
 /**
  * @title   AuraBalRewardPool
  * @author  Synthetix -> ConvexFinance -> adapted
+ * @notice  This AuraBalRewardPool is deployed to support auraBAL deposits during the first 2
+ *          weeks of system operation. After which, the BaseRewardPool hooked into the Booster (lockRewards)
+ *          will be used for auraBAL farming.
  * @dev     Modifications from convex-platform/contracts/contracts/BaseRewardPool.sol:
  *            - Delayed start (tokens transferred then delay is enforced before notification)
  *            - One time duration of 14 days
