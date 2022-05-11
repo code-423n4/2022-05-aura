@@ -20,6 +20,8 @@ Aura is a fork of the well known Convex system.
 - [Aura:Convex diff](https://github.com/aurafinance/convex-platform/pull/23/files?file-filters%5B%5D=.sol&show-viewed-files=true&show-deleted-files=false)
 - [Aura Lite Repo](https://github.com/aurafinance/aura-contracts-lite)
 - [Original Convex Docs](https://docs.convexfinance.com/convexfinance/)
+- [test output](./test-output.txt)
+- [fork test output](./fork-test-output.txt)
 
 ## Repo
 
