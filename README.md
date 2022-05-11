@@ -37,6 +37,8 @@ original convex code -> new aura versions
 - `convex-platform/contracts/contracts/VestedEscrow.sol` -> `contracts/AuraVestedEscrow.sol`
 - `convex-platform/contracts/contracts/vlCvxExtraRewardDistribution.sol` -> `contracts/ExtraRewardsDistributor.sol`
 
+Testing outputs can be found in `test-output.txt` and `fork-test-output.txt`
+
 ## Diagrams
 
 ### Aura Voting
