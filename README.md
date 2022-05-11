@@ -69,7 +69,7 @@ voting on snapshot with EIP-1271 signatures and a more graceful shutdown/release
 One key difference between Balancer and Curve is that Balancer has multiple fee distro contracts. We have made changes in the Booster contract
 `setFeeInfo` function to support this. As we are not getting these distros from a registy we have also added protection in `addPool`.
 
-![Booster Pools Rewards](https://user-images.githubusercontent.com/97352567/167505101-f1105826-c192-412c-adec-aeb0d64760e6.jpg)
+![Booster Pools Rewards (1)](https://user-images.githubusercontent.com/97352567/167840918-67f876c7-f7c7-4aa4-ab43-4ed3f7bcc60f.jpg)
 
 ### auraBAL Rewards
 
@@ -87,7 +87,7 @@ AURA tokens can be locked in the AuraLocker to recieve vlAURA. vlAURA is voting 
 to the original CvxLocker in order to support vote delegation. While vlAURA balances are currently only being used in the snapshot strategies
 in future they will be the voting token for our on chain governance. The lock duration is 17 weeks and rewards a distributed in 1 week epochs.
 
-![Aura Rewards](https://user-images.githubusercontent.com/97352567/167505104-c785b31c-8afb-4a51-9281-d0151e7646be.jpg)
+![Aura Rewards (2)](https://user-images.githubusercontent.com/97352567/167840889-3bb23b7a-d2cc-4b90-81c3-8e5ceb555648.jpg)
 
 ## Contracts Of Interest
 
