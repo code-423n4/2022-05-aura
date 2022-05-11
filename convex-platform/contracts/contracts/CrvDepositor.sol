@@ -64,6 +64,11 @@ contract CrvDepositor{
         feeManager = _feeManager;
     }
 
+    function setDaoOperator(address _daoOperator) external {
+        require(msg.sender == daoOperator, "!auth");
+        daoOperator = _daoOperator;
+    }
+
     function setFees(uint256 _lockIncentive) external{
         require(msg.sender==feeManager, "!auth");
 

@@ -60,7 +60,7 @@ contract BaseRewardPool4626 is BaseRewardPool, ReentrancyGuard, IERC4626 {
         IDeposit(operator).deposit(pid, assets, false);
         uint256 balAfter = stakingToken.balanceOf(address(this));
 
-        require(balAfter - balBefore == assets, "!deposit");
+        require(balAfter - balBefore >= assets, "!deposit");
 
         // Perform stake manually, now that the funds have been received
         _processStake(assets, receiver);
