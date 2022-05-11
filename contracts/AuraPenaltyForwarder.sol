@@ -7,7 +7,8 @@ import { SafeERC20 } from "@openzeppelin/contracts-0.8/token/ERC20/utils/SafeERC
 
 /**
  * @title AuraPenaltyForwarder
- * @dev Receives a given token and forwards it on to a distribution contract.
+ * @dev Receives a given token and forwards it on to a distribution contract. Used during
+ *      the bootstrapping period to forward AURA rewards to the extra rewards distributor.
  */
 contract AuraPenaltyForwarder {
     using SafeERC20 for IERC20;
