@@ -8,23 +8,23 @@ import "@openzeppelin/contracts-0.6/utils/Address.sol";
 import "@openzeppelin/contracts-0.6/token/ERC20/SafeERC20.sol";
 
 /**
- * @title   CurveVoterProxy
+ * @title   VoterProxy
  * @author  ConvexFinance
  * @notice  VoterProxy whitelisted in the curve SmartWalletWhitelist that
  *          participates in Curve governance. Also handles all deposits since this is 
  *          the address that has the voting power.
  */
-contract CurveVoterProxy {
+contract VoterProxy {
     using SafeERC20 for IERC20;
     using Address for address;
     using SafeMath for uint256;
 
-    address public immutable mintr;
+    address public mintr;
     address public immutable crv;
     address public immutable crvBpt;
 
     address public immutable escrow;
-    address public immutable gaugeController;
+    address public gaugeController;
     address public rewardDeposit;
     address public withdrawer;
 
@@ -37,6 +37,8 @@ contract CurveVoterProxy {
     mapping (bytes32 => bool) private votes;
 
     bytes4 constant internal EIP1271_MAGIC_VALUE = 0x1626ba7e;
+
+    event VoteSet(bytes32 hash, bool valid);
 
     /**
      * @param _mintr            CRV minter
@@ -73,10 +75,27 @@ contract CurveVoterProxy {
         owner = _owner;
     }
 
+    /**
+     * @notice Allows dao to set the reward withdrawal address
+     * @param _withdrawer Whitelisted withdrawer
+     * @param _rewardDeposit Distributor address
+     */
     function setRewardDeposit(address _withdrawer, address _rewardDeposit) external {
         require(msg.sender == owner, "!auth");
         withdrawer = _withdrawer;
         rewardDeposit = _rewardDeposit;
+    }
+
+    /**
+     * @notice Allows dao to set the external system config, should it change in the future
+     * @param _gaugeController External gauge controller address
+     * @param _mintr Token minter address for claiming rewards
+     */
+    function setSystemConfig(address _gaugeController, address _mintr) external returns (bool) {
+        require(msg.sender == owner, "!auth");
+        gaugeController = _gaugeController;
+        mintr = _mintr;
+        return true;
     }
 
     /**
@@ -112,12 +131,13 @@ contract CurveVoterProxy {
      * @notice Save a vote hash so when snapshot.org asks this contract if 
      *          a vote signature is valid we are able to check for a valid hash
      *          and return the appropriate response inline with EIP 1721
-     * @param hash  Hash of vote signature that was sent to snapshot.org
-     * @param valid Is the hash valid
+     * @param _hash  Hash of vote signature that was sent to snapshot.org
+     * @param _valid Is the hash valid
      */
-    function setVote(bytes32 hash, bool valid) external {
+    function setVote(bytes32 _hash, bool _valid) external {
         require(msg.sender == operator, "!auth");
-        votes[hash] = valid;
+        votes[_hash] = _valid;
+        emit VoteSet(_hash, _valid);
     }
 
     /**
@@ -125,11 +145,11 @@ contract CurveVoterProxy {
      * @dev     Snapshot Hub will call this function when a vote is submitted using
      *          snapshot.js on behalf of this contract. Snapshot Hub will call this
      *          function with the hash and the signature of the vote that was cast.
-     * @param hash Hash of the message that was sent to Snapshot Hub to cast a vote
+     * @param _hash Hash of the message that was sent to Snapshot Hub to cast a vote
      * @return EIP1271 magic value if the signature is value 
      */
-    function isValidSignature(bytes32 hash, bytes memory) public view returns (bytes4) {
-        if(votes[hash]) {
+    function isValidSignature(bytes32 _hash, bytes memory) public view returns (bytes4) {
+        if(votes[_hash]) {
             return EIP1271_MAGIC_VALUE;
         } else {
             return 0xffffffff;
@@ -252,7 +272,7 @@ contract CurveVoterProxy {
      * @notice  Withdraw all CRV from Curve's voting escrow contract
      * @dev     Only callable by CrvDepositor and can only withdraw if lock has expired
      */
-    function release() public returns(bool){
+    function release() external returns(bool){
         require(msg.sender == depositor, "!auth");
         ICurveVoteEscrow(escrow).withdraw();
         return true;
@@ -267,6 +287,9 @@ contract CurveVoterProxy {
         return true;
     }
 
+    /**
+     * @notice Vote for a single gauge weight via the controller
+     */
     function voteGaugeWeight(address _gauge, uint256 _weight) external returns(bool){
         require(msg.sender == operator, "!auth");
 
@@ -309,7 +332,7 @@ contract CurveVoterProxy {
      */
     function claimFees(address _distroContract, address _token) external returns (uint256){
         require(msg.sender == operator, "!auth");
-        IFeeDistro(_distroContract).claim();
+        IFeeDistributor(_distroContract).claimToken(address(this), _token);
         uint256 _balance = IERC20(_token).balanceOf(address(this));
         IERC20(_token).safeTransfer(operator, _balance);
         return _balance;

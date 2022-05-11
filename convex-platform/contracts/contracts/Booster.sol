@@ -23,8 +23,8 @@ contract Booster{
     address public immutable voteOwnership;
     address public immutable voteParameter;
 
-    uint256 public lockIncentive = 550; //incentive to crv stakers
-    uint256 public stakerIncentive = 1100; //incentive to native token stakers
+    uint256 public lockIncentive = 825; //incentive to crv stakers
+    uint256 public stakerIncentive = 825; //incentive to native token stakers
     uint256 public earmarkIncentive = 50; //incentive to users who spend gas to make calls
     uint256 public platformFee = 0; //possible fee to build treasury
     uint256 public constant MaxFees = 2500;
@@ -44,9 +44,9 @@ contract Booster{
     address public stakerRewards; //cvx rewards
     address public lockRewards; //cvxCrv rewards(crv)
 
-    mapping(address => FeeDistro) public fees;
+    mapping(address => FeeDistro) public feeTokens;
     struct FeeDistro {
-        address token;
+        address distro;
         address rewards;
         bool active;
     }
@@ -100,7 +100,6 @@ contract Booster{
         address _voteOwnership,
         address _voteParameter
     ) public {
-        isShutdown = false;
         staker = _staker;
         minter = _minter;
         crv = _crv;
@@ -215,47 +214,52 @@ contract Booster{
      * @notice Set reward token and claim contract
      * @dev    This creates a secondary (VirtualRewardsPool) rewards contract for the vcxCrv staking contract
      */
-    function setFeeInfo(address _feeDistro) external {
-        require(msg.sender==owner, "!auth");
-        
-        // require _feeDistro not exists
-        require(fees[_feeDistro].token == address(0), "Already exists");
-        require(lockRewards != address(0) && rewardFactory != address(0), "System not initialised");
+    function setFeeInfo(address _feeToken, address _feeDistro) external {
+        require(msg.sender == owner, "!auth");
+        require(!isShutdown, "shutdown");
+        require(lockRewards != address(0) && rewardFactory != address(0), "!initialised");
 
-        address feeToken = IFeeDistro(_feeDistro).token();
-        require(feeToken != address(0), "Fee distro not initialised");
+        require(_feeToken != address(0) && _feeDistro != address(0), "!addresses");
+        require(IFeeDistributor(_feeDistro).getTokenTimeCursor(_feeToken) > 0, "!distro");
 
-        // Distributed directly
-        if(feeToken == crv){
-            fees[_feeDistro] = FeeDistro({
-                token: crv,
-                rewards: lockRewards,
-                active: true
-            });
-            emit FeeInfoUpdated(_feeDistro, crv, lockRewards);
+        if(feeTokens[_feeToken].distro == address(0)){
+            require(!gaugeMap[_feeToken], "!token");
+
+            // Distributed directly
+            if(_feeToken == crv){
+                feeTokens[crv] = FeeDistro({
+                    distro: _feeDistro,
+                    rewards: lockRewards,
+                    active: true
+                });
+                emit FeeInfoUpdated(_feeDistro, lockRewards, crv);
+            } else {
+                //create a new reward contract for the new token
+                address rewards = IRewardFactory(rewardFactory).CreateTokenRewards(_feeToken, lockRewards, address(this));
+                feeTokens[_feeToken] = FeeDistro({
+                    distro: _feeDistro,
+                    rewards: rewards,
+                    active: true
+                });
+                emit FeeInfoUpdated(_feeDistro, rewards, _feeToken);
+            }
         } else {
-            //create a new reward contract for the new token
-            address rewards = IRewardFactory(rewardFactory).CreateTokenRewards(feeToken, lockRewards, address(this));
-            fees[_feeDistro] = FeeDistro({
-                token: feeToken,
-                rewards: rewards,
-                active: true
-            });
-            emit FeeInfoUpdated(_feeDistro, rewards, feeToken);
+            feeTokens[_feeToken].distro = _feeDistro;
+            emit FeeInfoUpdated(_feeDistro, address(0), _feeToken);
         }
     }
 
     /**
      * @notice Allows turning off or on for fee distro
      */
-    function updateFeeInfo(address _feeDistro, bool _active) external {
+    function updateFeeInfo(address _feeToken, bool _active) external {
         require(msg.sender==owner, "!auth");
 
-        require(fees[_feeDistro].token != address(0), "Fee doesn't exist");
+        require(feeTokens[_feeToken].distro != address(0), "Fee doesn't exist");
 
-        fees[_feeDistro].active = _active;
+        feeTokens[_feeToken].active = _active;
 
-        emit FeeInfoChanged(_feeDistro, _active);
+        emit FeeInfoChanged(_feeToken, _active);
     }
 
     /**
@@ -308,6 +312,7 @@ contract Booster{
     function addPool(address _lptoken, address _gauge, uint256 _stashVersion) external returns(bool){
         require(msg.sender==poolManager && !isShutdown, "!add");
         require(_gauge != address(0) && _lptoken != address(0),"!param");
+        require(feeTokens[_gauge].distro == address(0), "!gauge");
 
         //the next pool's pid
         uint256 pid = poolInfo.length;
@@ -506,10 +511,10 @@ contract Booster{
     /**
      * @notice set valid vote hash on VoterProxy 
      */
-    function setVote(bytes32 hash, bool valid) external returns(bool){
+    function setVote(bytes32 _hash, bool valid) external returns(bool){
         require(msg.sender == voteDelegate, "!auth");
         
-        IStaker(staker).setVote(hash, valid);
+        IStaker(staker).setVote(_hash, valid);
         return true;
     }
 
@@ -636,17 +641,22 @@ contract Booster{
      * @notice Claim fees from curve distro contract, put in lockers' reward contract.
      *         lockFees is the secondary reward contract that uses the virtual balances from cvxCrv
      */
-    function earmarkFees(address _feeDistro) external returns(bool){
-        FeeDistro memory distro = fees[_feeDistro];
+    function earmarkFees(address _feeToken) external returns(bool){
+        require(!isShutdown,"shutdown");
+        FeeDistro memory feeDistro = feeTokens[_feeToken];
         
-        require(distro.active, "Inactive distro");
+        require(feeDistro.active, "Inactive distro");
+        require(!gaugeMap[_feeToken], "Invalid token");
 
         //claim fee rewards
-        IStaker(staker).claimFees(_feeDistro, distro.token);
+        uint256 tokenBalanceBefore = IERC20(_feeToken).balanceOf(address(this));
+        IStaker(staker).claimFees(feeDistro.distro, _feeToken);
+        uint256 tokenBalanceAfter = IERC20(_feeToken).balanceOf(address(this));
+        uint256 feesClaimed = tokenBalanceAfter.sub(tokenBalanceBefore);
+
         //send fee rewards to reward contract
-        uint256 _balance = IERC20(distro.token).balanceOf(address(this));
-        IERC20(distro.token).safeTransfer(distro.rewards, _balance);
-        IRewards(distro.rewards).queueNewRewards(_balance);
+        IERC20(_feeToken).safeTransfer(feeDistro.rewards, feesClaimed);
+        IRewards(feeDistro.rewards).queueNewRewards(feesClaimed);
 
         return true;
     }

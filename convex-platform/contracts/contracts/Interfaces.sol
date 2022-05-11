@@ -82,9 +82,10 @@ interface IStash{
     function initialize(uint256 _pid, address _operator, address _staker, address _gauge, address _rewardFactory) external;
 }
 
-interface IFeeDistro{
-    function claim() external;
-    function token() external view returns(address);
+interface IFeeDistributor {
+    function claimToken(address user, address token) external returns (uint256);
+    function claimTokens(address user, address[] calldata tokens) external returns (uint256[] memory);
+    function getTokenTimeCursor(address token) external view returns (uint256);
 }
 
 interface ITokenMinter{
