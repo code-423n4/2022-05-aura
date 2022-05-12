@@ -23,7 +23,7 @@ Aura is a fork of the well known Convex system. Naming conventions and architect
 
 ## Repo
 
-All files in `contracts` and `convex-platform/contracts` are included in this audit competition.
+All files in `contracts` and `convex-platform/contracts` are included in this audit competition (excluding `/mocks`)
 
 Contracts specific to Aura or those needing larger changes are in the `contracts`, and modified files from the Convex protocol are in the `convex-platform/` folder. This strategy has been taken to preserve the file formatting to make diff'ing the files easier (view [diff here](https://github.com/aurafinance/convex-platform/pull/23/files?file-filters%5B%5D=.sol&show-viewed-files=true&show-deleted-files=true)). Contracts that are core to the system and flow of user funds remain in the `convex-platform/contracts` subdirectory.
 
