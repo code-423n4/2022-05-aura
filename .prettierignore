@@ -1,20 +1,15 @@
-.DS_*
 # directories
-.yarn/*
-!.yarn/patches
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
-**/artifacts
-**/build
-**/cache
-/coverage
+.yarn/
 **/.coverage_artifacts
 **/.coverage_cache
 **/.coverage_contracts
+**/artifacts
+**/build
+**/cache
+**/coverage
 **/dist
 **/node_modules
+**/types
 
 # files
 *.env
@@ -24,8 +19,7 @@ coverage.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-contracts.json
 
-# types
-types/generated/**/*
-_flat
+#Convex files
+convex-platform/contracts
+convex-platform/README.md

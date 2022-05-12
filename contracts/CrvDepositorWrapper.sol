@@ -15,7 +15,6 @@ interface ICrvDepositor {
     ) external;
 }
 
-
 /**
  * @title   BalInvestor
  * @notice  Deposits $BAL into a BAL/WETH BPT. Hooks into TWAP to determine minOut.
