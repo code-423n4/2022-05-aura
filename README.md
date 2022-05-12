@@ -77,7 +77,7 @@ voting on snapshot with EIP-1271 signatures and a more graceful shutdown/release
 One key difference between Balancer and Curve is that Balancer has multiple fee distro contracts. We have made changes in the Booster contract
 `setFeeInfo` function to support this. As we are not getting these distros from a registy we have also added protection in `addPool`.
 
-![Booster Pools Rewards (1)](https://user-images.githubusercontent.com/97352567/167840918-67f876c7-f7c7-4aa4-ab43-4ed3f7bcc60f.jpg)
+![Booster Pools Rewards (2)](https://user-images.githubusercontent.com/97352567/168024732-99c1adaf-8a69-4641-8269-e9e51775d89d.jpg)
 
 ### auraBAL Rewards
 
