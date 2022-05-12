@@ -1,12 +1,12 @@
 # Aura Finance contest details
 
-- $142,500 USDC main award pot
-- $7,500 USDC gas optimization award pot
-- Join [C4 Discord](https://discord.gg/code4rena) to register
-- Submit findings [using the C4 form](https://code4rena.com/contests/2022-05-aura-finance-contest/submit)
-- [Read our guidelines for more details](https://docs.code4rena.com/roles/wardens)
-- Starts May 11, 2022 13:00 UTC
-- Ends May 25, 2022 12:59 UTC
+-   $142,500 USDC main award pot
+-   $7,500 USDC gas optimization award pot
+-   Join [C4 Discord](https://discord.gg/code4rena) to register
+-   Submit findings [using the C4 form](https://code4rena.com/contests/2022-05-aura-finance-contest/submit)
+-   [Read our guidelines for more details](https://docs.code4rena.com/roles/wardens)
+-   Starts May 11, 2022 13:00 UTC
+-   Ends May 25, 2022 12:59 UTC
 
 ## What is Aura
 
@@ -16,16 +16,14 @@ Aura is a fork of the well known Convex system. Naming conventions and architect
 
 ## Links
 
-- [Aura Contracts Repo](https://github.com/aurafinance/aura-contracts-lite)
-- [Aura:Convex diff](https://github.com/aurafinance/convex-platform/pull/23/files?file-filters%5B%5D=.sol&show-viewed-files=true&show-deleted-files=true)
-- [Docs](https://docs.aura.finance/)
-- [Original Convex Docs](https://docs.convexfinance.com/convexfinance/)
-- [test output](https://github.com/code-423n4/2022-05-aura/blob/main/test-output.txt)
-- [fork test output](https://github.com/code-423n4/2022-05-aura/blob/main/fork-test-output.txt)
+-   [Aura Contracts Repo](https://github.com/aurafinance/aura-contracts-lite)
+-   [Aura:Convex diff](https://github.com/aurafinance/convex-platform/pull/23/files?file-filters%5B%5D=.sol&show-viewed-files=true&show-deleted-files=true)
+-   [Docs](https://docs.aura.finance/)
+-   [Original Convex Docs](https://docs.convexfinance.com/convexfinance/)
 
 ## Repo
 
-All files in `contracts` and `convex-platform/contracts` are included in this audit competition.
+All files in `contracts` and `convex-platform/contracts` are included in this audit competition (excluding `/mocks`)
 
 Contracts specific to Aura or those needing larger changes are in the `contracts`, and modified files from the Convex protocol are in the `convex-platform/` folder. This strategy has been taken to preserve the file formatting to make diff'ing the files easier (view [diff here](https://github.com/aurafinance/convex-platform/pull/23/files?file-filters%5B%5D=.sol&show-viewed-files=true&show-deleted-files=true)). Contracts that are core to the system and flow of user funds remain in the `convex-platform/contracts` subdirectory.
 
@@ -33,17 +31,36 @@ Contracts in `contracts/` are either peripheral (AuraClaimZap, AuraStakingProxy,
 
 original convex code -> new aura versions
 
-- `convex-platform/.../Cvx.sol` -> `contracts/Aura.sol`
-- `convex-platform/.../BaseRewardPool.sol` -> `contracts/AuraBalRewardPool.sol`
-- `convex-platform/.../ClaimZap.sol` -> `contracts/AuraClaimZap.sol`
-- `convex-platform/.../CvxLocker.sol` -> `contracts/AuraLocker.sol`
-- `convex-platform/.../MerkleDrop.sol` -> `contracts/AuraMerkleDrop.sol`
-- `convex-platform/.../interfaces/BoringMath.sol` -> `contracts/AuraMath.sol`
-- `convex-platform/.../CvxStakingProxy.sol` -> `contracts/AuraStakingProxy.sol`
-- `convex-platform/.../VestedEscrow.sol` -> `contracts/AuraVestedEscrow.sol`
-- `convex-platform/.../vlCvxExtraRewardDistribution.sol` -> `contracts/ExtraRewardsDistributor.sol`
+-   `convex-platform/.../Cvx.sol` -> `contracts/Aura.sol`
+-   `convex-platform/.../BaseRewardPool.sol` -> `contracts/AuraBalRewardPool.sol`
+-   `convex-platform/.../ClaimZap.sol` -> `contracts/AuraClaimZap.sol`
+-   `convex-platform/.../CvxLocker.sol` -> `contracts/AuraLocker.sol`
+-   `convex-platform/.../MerkleDrop.sol` -> `contracts/AuraMerkleDrop.sol`
+-   `convex-platform/.../interfaces/BoringMath.sol` -> `contracts/AuraMath.sol`
+-   `convex-platform/.../CvxStakingProxy.sol` -> `contracts/AuraStakingProxy.sol`
+-   `convex-platform/.../VestedEscrow.sol` -> `contracts/AuraVestedEscrow.sol`
+-   `convex-platform/.../vlCvxExtraRewardDistribution.sol` -> `contracts/ExtraRewardsDistributor.sol`
 
 Testing outputs can be found in `test-output.txt` and `fork-test-output.txt`
+
+## Running tests
+
+Run the full test suite:
+
+```
+yarn
+yarn compile
+yarn test
+```
+
+Run the fork test suite:
+
+```
+yarn
+yarn compile
+export NODE_URL=<alchemy mainnet archive node URL>
+yarn test:fork:all
+```
 
 ## Diagrams
 
