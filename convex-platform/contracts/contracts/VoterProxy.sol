@@ -234,7 +234,7 @@ contract VoterProxy {
     
     
     /**
-     * @notice  Lock CRV in curves voting escrow contract
+     * @notice  Lock CRV in Curve's voting escrow contract
      * @dev     Called by the CrvDepositor contract
      * @param _value      Amount of crv to lock
      * @param _unlockTime Timestamp to unlock (max is 4 years)

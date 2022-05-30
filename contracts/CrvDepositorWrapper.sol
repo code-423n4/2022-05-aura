@@ -3,8 +3,7 @@ pragma solidity 0.8.11;
 
 import { IERC20 } from "@openzeppelin/contracts-0.8/token/ERC20/IERC20.sol";
 import { SafeERC20 } from "@openzeppelin/contracts-0.8/token/ERC20/utils/SafeERC20.sol";
-import { IVault, IPriceOracle, ICrvDepositorWrapper, IAsset } from "./Interfaces.sol";
-import { IVault } from "./Interfaces.sol";
+import { IVault, ICrvDepositorWrapper, IPriceOracle, IAsset } from "./Interfaces.sol";
 
 interface ICrvDepositor {
     function depositFor(

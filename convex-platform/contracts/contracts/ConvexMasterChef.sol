@@ -2,6 +2,7 @@
 
 pragma solidity 0.6.12;
 
+import { ReentrancyGuard } from "@openzeppelin/contracts-0.6/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts-0.6/math/SafeMath.sol";
 import "@openzeppelin/contracts-0.6/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-0.6/token/ERC20/SafeERC20.sol";
@@ -18,7 +19,7 @@ import "./interfaces/IRewarder.sol";
  *          To kick things off, just transfer CVX here and add some pools - rewards will be distributed
  *          pro-rata based on the allocation points in each pool vs the total alloc.
  */
-contract ConvexMasterChef is Ownable {
+contract ConvexMasterChef is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -57,6 +58,7 @@ contract ConvexMasterChef is Ownable {
 
     // Info of each pool.
     PoolInfo[] public poolInfo;
+    mapping(address => bool) public isAddedPool;
     // Info of each user that stakes LP tokens.
     mapping(uint256 => mapping(address => UserInfo)) public userInfo;
     // Total allocation points. Must be the sum of all allocation points in all pools.
@@ -82,6 +84,7 @@ contract ConvexMasterChef is Ownable {
         uint256 _endBlock
     ) public {
         cvx = _cvx;
+        isAddedPool[address(_cvx)] = true;
         rewardPerBlock = _rewardPerBlock;
         startBlock = _startBlock;
         endBlock = _endBlock;
@@ -96,12 +99,15 @@ contract ConvexMasterChef is Ownable {
     function add(
         uint256 _allocPoint,
         IERC20 _lpToken,
-        IRewarder _rewarder,
-        bool _withUpdate
-    ) public onlyOwner {
-        if (_withUpdate) {
-            massUpdatePools();
-        }
+        IRewarder _rewarder
+    ) public onlyOwner nonReentrant {
+        require(poolInfo.length < 32, "max pools");
+
+        require(!isAddedPool[address(_lpToken)], "add: Duplicated LP Token");
+        isAddedPool[address(_lpToken)] = true;
+
+        massUpdatePools();
+
         uint256 lastRewardBlock = block.number > startBlock
             ? block.number
             : startBlock;
@@ -122,15 +128,15 @@ contract ConvexMasterChef is Ownable {
         uint256 _pid,
         uint256 _allocPoint,
         IRewarder _rewarder,
-        bool _withUpdate,
         bool _updateRewarder
-    ) public onlyOwner {
-        if (_withUpdate) {
-            massUpdatePools();
-        }
+    ) public onlyOwner nonReentrant {
+        massUpdatePools();
+
         totalAllocPoint = totalAllocPoint.sub(poolInfo[_pid].allocPoint).add(
             _allocPoint
         );
+        require(totalAllocPoint > 0, "!alloc");
+
         poolInfo[_pid].allocPoint = _allocPoint;
         if(_updateRewarder){
             poolInfo[_pid].rewarder = _rewarder;
@@ -206,7 +212,7 @@ contract ConvexMasterChef is Ownable {
     }
 
     // Deposit LP tokens to MasterChef for CVX allocation.
-    function deposit(uint256 _pid, uint256 _amount) public {
+    function deposit(uint256 _pid, uint256 _amount) public nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         updatePool(_pid);
@@ -236,7 +242,7 @@ contract ConvexMasterChef is Ownable {
     }
 
     // Withdraw LP tokens from MasterChef.
-    function withdraw(uint256 _pid, uint256 _amount) public {
+    function withdraw(uint256 _pid, uint256 _amount) public nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         require(user.amount >= _amount, "withdraw: not good");
@@ -259,7 +265,7 @@ contract ConvexMasterChef is Ownable {
         emit Withdraw(msg.sender, _pid, _amount);
     }
 
-    function claim(uint256 _pid, address _account) external{
+    function claim(uint256 _pid, address _account) external nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_account];
 
@@ -280,7 +286,7 @@ contract ConvexMasterChef is Ownable {
     }
 
     // Withdraw without caring about rewards. EMERGENCY ONLY.
-    function emergencyWithdraw(uint256 _pid) public {
+    function emergencyWithdraw(uint256 _pid) public nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         pool.lpToken.safeTransfer(address(msg.sender), user.amount);

@@ -136,7 +136,7 @@ contract Booster{
      * @notice Fee Manager can update the fees (lockIncentive, stakeIncentive, earmarkIncentive, platformFee)
      */
     function setFeeManager(address _feeM) external {
-        require(msg.sender == feeManager, "!auth");
+        require(msg.sender == owner, "!auth");
         feeManager = _feeM;
 
         emit FeeManagerUpdated(_feeM);
@@ -189,7 +189,7 @@ contract Booster{
      * @notice Vote Delegate has the rights to cast votes on the VoterProxy via the Booster
      */
     function setVoteDelegate(address _voteDelegate) external {
-        require(msg.sender==voteDelegate, "!auth");
+        require(msg.sender==owner, "!auth");
         voteDelegate = _voteDelegate;
 
         emit VoteDelegateUpdated(_voteDelegate);
@@ -235,6 +235,7 @@ contract Booster{
                 emit FeeInfoUpdated(_feeDistro, lockRewards, crv);
             } else {
                 //create a new reward contract for the new token
+                require(IRewards(lockRewards).extraRewardsLength() < 10, "too many rewards");
                 address rewards = IRewardFactory(rewardFactory).CreateTokenRewards(_feeToken, lockRewards, address(this));
                 feeTokens[_feeToken] = FeeDistro({
                     distro: _feeDistro,
@@ -369,7 +370,7 @@ contract Booster{
     }
 
     /**
-     * @notice Shuts down the WHOLE SYSTEM by withdrawing all the LP tokens ot here and then allowing
+     * @notice Shuts down the WHOLE SYSTEM by withdrawing all the LP tokens to here and then allowing
      *         for subsequent withdrawal by any depositors.
      */
     function shutdownSystem() external{
@@ -566,7 +567,7 @@ contract Booster{
 
     /**
      * @notice Basically a hugely pivotal function.
-     *         Repsonsible for collecting the crv from gauge, and then redistributing to the correct place.
+     *         Responsible for collecting the crv from gauge, and then redistributing to the correct place.
      *         Pays the caller a fee to process this.
      */
     function _earmarkRewards(uint256 _pid) internal {
@@ -628,7 +629,7 @@ contract Booster{
 
     /**
      * @notice Basically a hugely pivotal function.
-     *         Repsonsible for collecting the crv from gauge, and then redistributing to the correct place.
+     *         Responsible for collecting the crv from gauge, and then redistributing to the correct place.
      *         Pays the caller a fee to process this.
      */
     function earmarkRewards(uint256 _pid) external returns(bool){

@@ -11,7 +11,7 @@ import "@openzeppelin/contracts-0.6/token/ERC20/SafeERC20.sol";
 /**
  * @title   CrvDepositor
  * @author  ConvexFinance
- * @notice  This is the entry point for CRV > cvxCRV wrapping. It accepts CRV, sends to 'staler'
+ * @notice  This is the entry point for CRV > cvxCRV wrapping. It accepts CRV, sends to 'staker'
  *          for depositing into Curves VotingEscrow, and then mints cvxCRV at 1:1 via the 'minter' (cCrv) minus
  *          the lockIncentive (initially 1%) which is used to basically compensate users who call the `lock` function on Curves
  *          system (larger depositors would likely want to lock).
@@ -106,7 +106,7 @@ contract CrvDepositor{
     //lock curve
     function _lockCurve() internal {
         if(cooldown) {
-          return;
+            return;
         }
 
         uint256 crvBalance = IERC20(crvBpt).balanceOf(address(this));
@@ -127,8 +127,8 @@ contract CrvDepositor{
         uint256 unlockAt = block.timestamp + MAXTIME;
         uint256 unlockInWeeks = (unlockAt/WEEK)*WEEK;
 
-        //increase time too if over 2 week buffer
-        if(unlockInWeeks.sub(unlockTime) > 2){
+        //increase time too if over 1 week buffer
+        if(unlockInWeeks.sub(unlockTime) >= WEEK){
             IStaker(staker).increaseTime(unlockAt);
             unlockTime = unlockInWeeks;
         }
@@ -158,7 +158,7 @@ contract CrvDepositor{
 
     /**
      * @notice Deposit crvBpt for cvxCrv
-     * @dev    Can locking immediately or defer locking to someone else by paying a fee.
+     * @dev    Can lock immediately or defer locking to someone else by paying a fee.
      *         while users can choose to lock or defer, this is mostly in place so that
      *         the cvx reward contract isnt costly to claim rewards.
      * @param _amount        Units of CRV to deposit
@@ -167,7 +167,8 @@ contract CrvDepositor{
      */
     function depositFor(address to, uint256 _amount, bool _lock, address _stakeAddress) public {
         require(_amount > 0,"!>0");
-        
+        require(!cooldown, "cooldown");
+
         if(_lock){
             //lock immediately, transfer directly to staker to skip an erc20 transfer
             IERC20(crvBpt).safeTransferFrom(msg.sender, staker, _amount);

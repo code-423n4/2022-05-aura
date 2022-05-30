@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.11;
+pragma solidity 0.8.11;
 
 import { Address } from "@openzeppelin/contracts-0.8/utils/Address.sol";
 import { IERC20 } from "@openzeppelin/contracts-0.8/token/ERC20/IERC20.sol";
@@ -10,7 +10,8 @@ import { IAuraLocker, ICrvDepositorWrapper } from "./Interfaces.sol";
 /**
  * @title   AuraStakingProxy
  * @author  adapted from ConvexFinance
- * @notice  Receives CRV from the Booster as overall reward, then convers to cvxCRV and distributes to vlCVX holders.
+ * @notice  Receives CRV from the Booster as overall reward, then distributes to vlCVX holders. Also
+ *          acts as a depositor proxy to support deposit/withdrawals from the CVX staking contract.
  * @dev     From CVX:
  *           - receive tokens to stake
  *           - get current staked balance
@@ -151,6 +152,11 @@ contract AuraStakingProxy {
         IERC20(_token).safeTransfer(_to, bal);
     }
 
+    function distribute(uint256 _minOut) external {
+        require(msg.sender == keeper, "!auth");
+        _distribute(_minOut);
+    }
+
     /**
      * @dev Collects cvxCRV rewards from cvxRewardPool, converts any CRV deposited directly from
      *      the booster, and then applies the rewards to the cvxLocker, rewarding the caller in the process.
@@ -160,11 +166,16 @@ contract AuraStakingProxy {
         if (keeper != address(0)) {
             require(msg.sender == keeper, "!auth");
         }
+        _distribute(0);
+    }
 
+    function _distribute(uint256 _minOut) internal {
         //convert crv to cvxCrv
         uint256 crvBal = IERC20(crv).balanceOf(address(this));
         if (crvBal > 0) {
-            uint256 minOut = ICrvDepositorWrapper(crvDepositorWrapper).getMinOut(crvBal, outputBps);
+            uint256 minOut = _minOut != 0
+                ? _minOut
+                : ICrvDepositorWrapper(crvDepositorWrapper).getMinOut(crvBal, outputBps);
             ICrvDepositorWrapper(crvDepositorWrapper).deposit(crvBal, minOut, true, address(0));
         }
 
@@ -179,7 +190,7 @@ contract AuraStakingProxy {
             IERC20(cvxCrv).safeTransfer(msg.sender, incentiveAmount);
 
             //update rewards
-            IAuraLocker(rewards).queueNewRewards(cvxCrvBal);
+            IAuraLocker(rewards).queueNewRewards(cvxCrv, cvxCrvBal);
 
             emit RewardsDistributed(cvxCrv, cvxCrvBal);
         }
@@ -205,7 +216,7 @@ contract AuraStakingProxy {
             _token.safeApprove(rewards, type(uint256).max);
 
             //update rewards
-            IAuraLocker(rewards).notifyRewardAmount(address(_token), bal);
+            IAuraLocker(rewards).queueNewRewards(address(_token), bal);
 
             emit RewardsDistributed(address(_token), bal);
         }
