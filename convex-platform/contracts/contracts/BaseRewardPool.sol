@@ -110,11 +110,11 @@ contract BaseRewardPool {
         rewardManager = rewardManager_;
     }
 
-    function totalSupply() public view returns (uint256) {
+    function totalSupply() public view virtual returns (uint256) {
         return _totalSupply;
     }
 
-    function balanceOf(address account) public view returns (uint256) {
+    function balanceOf(address account) public view virtual returns (uint256) {
         return _balances[account];
     }
 
@@ -249,7 +249,7 @@ contract BaseRewardPool {
     }
 
     function withdrawAndUnwrap(uint256 amount, bool claim) public returns(bool){
-        _withdrawAndUnwrapTo(amount, msg.sender);
+        _withdrawAndUnwrapTo(amount, msg.sender, msg.sender);
         //get rewards too
         if(claim){
             getReward(msg.sender,true);
@@ -257,18 +257,18 @@ contract BaseRewardPool {
         return true;
     }
 
-    function _withdrawAndUnwrapTo(uint256 amount, address receiver) internal updateReward(msg.sender) returns(bool){
+    function _withdrawAndUnwrapTo(uint256 amount, address from, address receiver) internal updateReward(from) returns(bool){
         //also withdraw from linked rewards
         for(uint i=0; i < extraRewards.length; i++){
-            IRewards(extraRewards[i]).withdraw(msg.sender, amount);
+            IRewards(extraRewards[i]).withdraw(from, amount);
         }
         
         _totalSupply = _totalSupply.sub(amount);
-        _balances[msg.sender] = _balances[msg.sender].sub(amount);
+        _balances[from] = _balances[from].sub(amount);
 
         //tell operator to withdraw from here directly to user
         IDeposit(operator).withdrawTo(pid,amount,receiver);
-        emit Withdrawn(msg.sender, amount);
+        emit Withdrawn(from, amount);
 
         return true;
     }
@@ -314,6 +314,17 @@ contract BaseRewardPool {
     function donate(uint256 _amount) external returns(bool){
         IERC20(rewardToken).safeTransferFrom(msg.sender, address(this), _amount);
         queuedRewards = queuedRewards.add(_amount);
+    }
+
+    /**
+     * @dev Processes queued rewards in isolation, providing the period has finished.
+     *      This allows a cheaper way to trigger rewards on low value pools.
+     */
+    function processIdleRewards() external {
+        if (block.timestamp >= periodFinish && queuedRewards > 0) {
+            notifyRewardAmount(queuedRewards);
+            queuedRewards = 0;
+        }
     }
 
     /**

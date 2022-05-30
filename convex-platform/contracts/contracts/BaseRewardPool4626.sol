@@ -2,7 +2,7 @@
 pragma solidity 0.6.12;
 
 import { BaseRewardPool, IDeposit } from "./BaseRewardPool.sol";
-import { IERC4626 } from "./interfaces/IERC4626.sol";
+import { IERC4626, IERC20Metadata } from "./interfaces/IERC4626.sol";
 import { IERC20 } from "@openzeppelin/contracts-0.6/token/ERC20/IERC20.sol";
 import { ReentrancyGuard } from "@openzeppelin/contracts-0.6/utils/ReentrancyGuard.sol";
 import { SafeERC20 } from "@openzeppelin/contracts-0.6/token/ERC20/SafeERC20.sol";
@@ -24,6 +24,8 @@ contract BaseRewardPool4626 is BaseRewardPool, ReentrancyGuard, IERC4626 {
      * the Vault for accounting, depositing, and withdrawing.
      */
     address public override asset;
+
+    mapping (address => mapping (address => uint256)) private _allowances;
 
     /**
      * @dev See BaseRewardPool.sol
@@ -87,11 +89,13 @@ contract BaseRewardPool4626 is BaseRewardPool, ReentrancyGuard, IERC4626 {
         address receiver,
         address owner
     ) public virtual override nonReentrant returns (uint256) {
-        require(owner == msg.sender, "!owner");
+        if (msg.sender != owner) {
+            _approve(owner, msg.sender, _allowances[owner][msg.sender].sub(assets, "ERC4626: withdrawal amount exceeds allowance"));
+        }
         
-        _withdrawAndUnwrapTo(assets, receiver);
+        _withdrawAndUnwrapTo(assets, owner, receiver);
 
-        emit Withdraw(msg.sender, receiver, assets, assets);
+        emit Withdraw(msg.sender, receiver, owner, assets, assets);
         return assets;
     }
 
@@ -131,7 +135,7 @@ contract BaseRewardPool4626 is BaseRewardPool, ReentrancyGuard, IERC4626 {
      * corresponds to the input parameter `receiver` of a
      * `deposit` call.
      */
-    function maxDeposit(address owner) public view virtual override returns (uint256) {
+    function maxDeposit(address /* owner */) public view virtual override returns (uint256) {
         return type(uint256).max;
     }
 
@@ -195,5 +199,98 @@ contract BaseRewardPool4626 is BaseRewardPool, ReentrancyGuard, IERC4626 {
      */
     function previewRedeem(uint256 shares) external view virtual override returns(uint256){
         return previewWithdraw(shares);
+    }
+
+
+    /* ========== IERC20 ========== */
+
+    /**
+     * @dev Returns the name of the token.
+     */
+    function name() external view override returns (string memory) {
+        return string(
+            abi.encodePacked(IERC20Metadata(address(stakingToken)).name(), " Vault")
+        );
+    }
+
+    /**
+     * @dev Returns the symbol of the token.
+     */
+    function symbol() external view override returns (string memory) {
+        return string(
+            abi.encodePacked(IERC20Metadata(address(stakingToken)).symbol(), "-vault")
+        );
+    }
+
+    /**
+     * @dev Returns the decimals places of the token.
+     */
+    function decimals() external view override returns (uint8) {
+        return 18;
+    }
+
+    /**
+     * @dev Returns the amount of tokens in existence.
+     */
+    function totalSupply() public view override(BaseRewardPool, IERC20) returns (uint256) {
+        return BaseRewardPool.totalSupply();
+    }
+
+    /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) public view override(BaseRewardPool, IERC20) returns (uint256) {
+        return BaseRewardPool.balanceOf(account);
+    }
+
+    /**
+     * @dev Moves `amount` tokens from the caller's account to `recipient`.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transfer(address /* recipient */, uint256 /* amount */) external override returns (bool) {
+        revert("ERC4626: Not supported");
+    }
+
+
+    /**
+     * @dev See {IERC20-allowance}.
+     */
+    function allowance(address owner, address spender) public view virtual override returns (uint256) {
+        return _allowances[owner][spender];
+    }
+
+    /**
+     * @dev See {IERC20-approve}.
+     *
+     * Requirements:
+     *
+     * - `spender` cannot be the zero address.
+     */
+    function approve(address spender, uint256 amount) public virtual override returns (bool) {
+        _approve(msg.sender, spender, amount);
+        return true;
+    }
+
+    /**
+     * @dev Sets `amount` as the allowance of `spender` over the `owner` s tokens.
+     */
+    function _approve(address owner, address spender, uint256 amount) internal virtual {
+        require(owner != address(0), "ERC4626: approve from the zero address");
+        require(spender != address(0), "ERC4626: approve to the zero address");
+
+        _allowances[owner][spender] = amount;
+        emit Approval(owner, spender, amount);
+    }
+
+    /**
+     * @dev Moves `amount` tokens from `sender` to `recipient` using the
+     * allowance mechanism. `amount` is then deducted from the caller's
+     * allowance.
+     */
+    function transferFrom(address /* sender */, address /* recipient */, uint256 /* amount */) external override returns (bool) {
+        revert("ERC4626: Not supported");
     }
 }
