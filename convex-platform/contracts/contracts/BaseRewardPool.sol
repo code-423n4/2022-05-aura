@@ -125,7 +125,11 @@ contract BaseRewardPool {
     function addExtraReward(address _reward) external returns(bool){
         require(msg.sender == rewardManager, "!authorized");
         require(_reward != address(0),"!reward setting");
-
+        
+        if(extraRewards.length >= 12){
+            return false;
+        }
+        
         extraRewards.push(_reward);
         return true;
     }

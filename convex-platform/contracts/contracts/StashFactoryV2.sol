@@ -54,6 +54,7 @@ contract StashFactoryV2 {
     //function calls are different depending on the version of curve gauges so determine which stash type is needed
     function CreateStash(uint256 _pid, address _gauge, address _staker, uint256 _stashVersion) external returns(address){
         require(msg.sender == operator, "!authorized");
+        require(_gauge != address(0), "!gauge");
 
         if(_stashVersion == uint256(3) && IsV3(_gauge)){
             //v3
