@@ -1,0 +1,520 @@
+==============================================================
+Guild: Code4rena
+Channel: ARCHIVE-Q2-2022 / ☑aura-may11
+==============================================================
+
+[05/09/2022 8:18 PM] kartoonjoy
+👋 Hello and welcome to the contest channel for the $150K USDC **Aura Finance** contest!
+
+📆 Contest opens May 11, 2022 at 13:00 UTC and runs through May 25, 2022 at 12:59 UTC (14 days).
+
+Please give a warm welcome to the Aura Finance team, particularly @phijfry, @0xMaha, who will be available for questions either here in the channel or via DM.
+
+We'll be posting relevant links, documentation, etc. here, so if you intend to participate in this contest, consider enabling notifications for this channel. 🐺 ⏰
+
+Contest Page: https://code4rena.com/contests/2022-05-aura-finance-contest
+
+{Embed}
+https://code4rena.com/contests/2022-05-aura-finance-contest
+Code4rena Aura Finance contest
+$150,000 USDC
+11 May 2022—25 May 2022
+Code4rena - ARCHIVE-Q2-2022 - ☑aura-may11 [973316471793025054].txt_Files/C4-banner-7C19B.png
+
+{Reactions}
+👀 (7) 
+
+[05/09/2022 8:19 PM] p_crypt0
+Can't wait😍  Welcome @phijfry and @0xMaha
+
+{Reactions}
+C4Keycap (2) 
+
+[05/10/2022 7:51 AM] 0xmaha
+🔒 🚀
+
+{Reactions}
+💯 
+
+[05/11/2022 1:02 PM] phijfry#7179
+🦾💪🚀
+
+{Reactions}
+🎉 (5) 
+
+[05/11/2022 1:04 PM] phijfry#7179
+Feel free to DM myself or 0xMaha we have both worked on this codebase and will be happy to help to answer any questions you guys may have.
+
+
+[05/11/2022 1:57 PM] 0xmaha
+lets see you
+
+{Reactions}
+👋 (2) 
+
+[05/11/2022 3:01 PM] 0xmaha
+For those of you who haven't seen anything about Aura. Catch up here:
+1. https://forum.balancer.fi/t/proposal-allowlist-aura-finance-in-balancer-votingescrow
+2. https://twitter.com/AuraFinance/status/1522359579908091904
+
+{Embed}
+https://forum.balancer.fi/t/proposal-allowlist-aura-finance-in-balancer-votingescrow
+[Proposal] Allowlist Aura Finance in Balancer VotingEscrow
+Summary This proposal is to whitelist Aura Finance in Balancer’s VotingEscrow contract allowing Aura Finance to lock BAL (in the form of 80/20 BAL/WETH BPT), participate in Balancer governance, and provide additional rewards to Balancer ecosystem participants without immediate disposal of BAL rewards.   Abstract Aura Finance is a protocol built ...
+Code4rena - ARCHIVE-Q2-2022 - ☑aura-may11 [973316471793025054].txt_Files/83ffc16bfc2260f3df5a5a3ce44e59ab2c5de5e3_2-4FEEE.jpeg
+
+{Embed}
+Aura (@AuraFinance)
+https://twitter.com/AuraFinance/status/1522359579908091904
+We are live on Balancer Snapshot! 
+
+All community members voting will be eligible for an additional boost during the bootstrapping phase if the proposal is successful.
+
+You have 3 days to vote:
+https://t.co/bzqLork9hh
+Code4rena - ARCHIVE-Q2-2022 - ☑aura-may11 [973316471793025054].txt_Files/FSB_4THVcAAXrSe-D0ED9.jpg
+Twitter
+
+{Reactions}
+👍 thankyou 
+
+[05/11/2022 3:11 PM] fufanuu
+aura is like convex for balancer right?
+
+
+[05/11/2022 3:44 PM] phijfry#7179
+Correct, aura is a fork of the original Convex code. There are a few differences, we have tried our best to note them in the context README.
+
+
+[05/11/2022 4:07 PM] fufanuu
+thanks
+
+
+[05/11/2022 5:29 PM] 0x4non
+Are there any tests? i couldnt find them on the main repo
+
+
+[05/11/2022 5:47 PM] 0xmaha
+The test output is listed there (test-output.txt && test-fork-output.txt) but not the actual tests
+
+
+[05/11/2022 5:48 PM] 0xmaha
+The whole test suite and deployment tasks revolve around 1 shared deploy script. We didn't want to share that because of the risk of competitors forking
+
+
+[05/11/2022 6:21 PM] fufanuu
+=/
+
+
+[05/11/2022 6:22 PM] fufanuu
+just came to ask about test cases as well because you can save a ton of gas by doing some things and fixing some things.. I made some changes to your code base and wanted to run tests and make sure it still works
+
+
+[05/11/2022 6:23 PM] fufanuu
+insuring a good security audit imo is more important than worrying about someone forking your code, just my .02
+
+{Reactions}
+C4Keycap (4) 
+
+[05/11/2022 7:11 PM] 0x4non
+Same here, they don't need test to fork you and I think we could do a better job with test
+
+
+[05/11/2022 7:11 PM] pedroais
+The link to see differences between convex and aura contracts is wrong
+
+
+[05/11/2022 7:12 PM] pedroais
+https://github.com/code-423n4/2022-05-aura/blob/c332f8c23e12b3bb678f018682c7609df9c77ed9/convex-platform/contracts/contracts/Booster.sol#L308
+
+{Embed}
+https://github.com/code-423n4/2022-05-aura/blob/c332f8c23e12b3bb678f018682c7609df9c77ed9/convex-platform/contracts/contracts/Booster.sol
+2022-05-aura/Booster.sol at c332f8c23e12b3bb678f018682c7609df9c77ed...
+Contribute to code-423n4/2022-05-aura development by creating an account on GitHub.
+Code4rena - ARCHIVE-Q2-2022 - ☑aura-may11 [973316471793025054].txt_Files/eecc78c5-e4c8-4746-b464-3f4a2332c79b-1832D
+
+
+[05/11/2022 7:12 PM] pedroais
+Look at this there are two requires
+
+
+[05/11/2022 7:13 PM] pedroais
+The differences show a third require was added but I can't see it in the actual code
+
+{Attachments}
+Code4rena - ARCHIVE-Q2-2022 - ☑aura-may11 [973316471793025054].txt_Files/unknown-D6C62.png
+
+{Reactions}
+👀 
+
+[05/11/2022 8:22 PM] phijfry#7179
+Ahh yes, we've just realised we missed a commit that was this line when pushing code to the C4 repo. I blame git submodules... but yeee my mistake. We've just pushed a commit to rectify this and bring it up to date.  Thanks for pointing this out! 🙂
+
+
+[05/11/2022 8:24 PM] pedroais
+thanks
+
+{Reactions}
+👍 🦾 
+
+[05/12/2022 8:26 AM] 0xmaha
+I hear you ser. Going to look into this today 👌
+
+{Reactions}
+👍 
+
+[05/12/2022 9:20 AM] 0xmaha
+@Fufanuu @anon @Pedroais @0xjuicer @JDeryl.cap @p_crypt0 @Bernd  We just added the full test suite to the repo so that you can run any changes you want and dig into the system architecture etc. https://github.com/code-423n4/2022-05-aura#running-tests
+
+{Reactions}
+thankyou (5) 👉 (2) 👈 (2) 
+
+[05/12/2022 11:23 AM] fufanuu
+TY ser!
+
+{Reactions}
+💌 
+
+[05/12/2022 2:41 PM] kartoonjoy
+@🐺wardens The Aura team has added the full test suite to the repo so that you can run any changes you want and dig into the system architecture etc. https://github.com/code-423n4/2022-05-aura#running-tests
+
+{Embed}
+https://github.com/code-423n4/2022-05-aura
+GitHub - code-423n4/2022-05-aura
+Contribute to code-423n4/2022-05-aura development by creating an account on GitHub.
+Code4rena - ARCHIVE-Q2-2022 - ☑aura-may11 [973316471793025054].txt_Files/eecc78c5-e4c8-4746-b464-3f4a2332c79b-1832D
+
+{Reactions}
+🎉 (16) 
+
+[05/17/2022 4:57 AM] samruna
+Team, I summitted couple of issue from different contest, is there a way for me to take those back or delete?
+
+
+[05/17/2022 4:59 AM] liveactionllamac4
+On the C4 help form, there's an option for withdrawing a finding. 🙂
+https://code4rena.com/help
+
+
+[05/17/2022 10:03 AM] 0xmaha
+how we doing wardens?
+
+
+[05/17/2022 10:05 AM] 0xmaha
+As an additional bonus, Aura is awarding 20k $AURA tokens (i.e. $100kUS at 500m fdv) to anyone who finds a critical bug causing user deposits to be stolen or frozen across BPT pools, AuraLocker or auraBAL staking
+
+{Reactions}
+nice (20) C4Keycap (4) 👍 
+
+[05/17/2022 8:47 PM] samruna
+Hi Aura team
+
+
+[05/17/2022 8:48 PM] samruna
+When I run tests, I get below error, any idea what am I missing?
+
+
+[05/17/2022 8:48 PM] samruna
+TypeError: Cannot read properties of undefined (reading 'getAddress')
+
+
+[05/17/2022 8:51 PM] 100proof
+Can you copy-paste the full error message? Preferable between \`\`\` delimeters? 
+
+```
+like this
+```
+
+
+[05/17/2022 9:07 PM] samruna
+AuraBalRewardPool
+       "before all" hook in "AuraBalRewardPool":
+     TypeError: Cannot read properties of undefined (reading 'getAddress')
+      at C:\User\demo\2022-05-aura\scripts\deployMocks.ts:118:44
+      at Generator.next (<anonymous>)
+      at C:\User\demo\2022-05-aura\scripts\deployMocks.ts:8:71
+      at new Promise (<anonymous>)
+      at __awaiter (scripts\deployMocks.ts:4:12)
+      at deployMocks (scripts\deployMocks.ts:85:12)
+      at C:\User\demo\2022-05-aura\test\AuraBalRewardPool.spec.ts:32:40
+      at Generator.next (<anonymous>)
+      at C:\User\demo\2022-05-aura\test\AuraBalRewardPool.spec.ts:31:71
+      at new Promise (<anonymous>)
+
+
+[05/17/2022 11:52 PM] 100proof
+Looks like this is only an issue on Windows. 😦
+
+
+[05/18/2022 8:59 AM] 0xmaha
+Did you run `yarn && yarn compile` first?
+
+
+[05/18/2022 9:06 AM] 100proof
+I spoke to @samruna earlier. Yes he did run those two things first. I think there's something strange about his set up on Windows. It works fine on my Mac OS X set up.
+
+
+[05/18/2022 2:38 PM] samruna
+Yes all correct steps were taken, It was path problem on windows, not used to running on windows..but thanks for jumping in..
+
+
+[05/19/2022 12:22 AM] 100proof
+Glad you got it sorted out @samruna
+
+
+[05/20/2022 2:49 PM] 0xmaha
+Hey Wardens. In my eagerness to address some of the reports that you have made, I accidently misunderstood the rules of the bounty and pushed the fixes (https://github.com/code-423n4/2022-05-aura/pull/5) directly to the repo. To make up for leaking c4 alpha, we've discussed it with the C4 team and we're going to make that code eligible for review as well. So, the changes to the `BaseRewardPool4626.sol` and `BaseRewardPool.sol` are now open for findings and will be included in the payout 😄
+
+{Embed}
+https://github.com/code-423n4/2022-05-aura/pull/5
+chore: add 4626 and interface fix by 0xMaharishi · Pull Request #5 ...
+Code4rena - ARCHIVE-Q2-2022 - ☑aura-may11 [973316471793025054].txt_Files/5-C387C
+
+
+[05/20/2022 2:52 PM] sockdrawermoney
+In the interest of fairness, the findings addressed by the pull request will be eligible only up to the timestamp of the PR. Thanks for understanding and rolling with us on this one, folks. ❤️
+
+{Reactions}
+🟢 
+
+[05/20/2022 2:56 PM] fufanuu
+So if the PR is something we submitted as a finding what's the result I guess? i'm a bit confused.. Just to understand clearly, if I had already submitted those findings before the PR, it will be included in payouts/judging?
+
+
+[05/20/2022 3:43 PM] pedroais
+So if I had found some of those bugs but was waiting until the end to submit I can no longer submit them ?
+
+{Reactions}
+C4Keycap 🥲 (9) 🫂 (2) 
+
+[05/20/2022 4:32 PM] illilli000
+can the request be merged and can you let us know the commit url so we can just grab everything with the new changes in one zip?
+
+{Reactions}
+👍 
+
+[05/20/2022 6:25 PM] sockdrawermoney
+Yes, if you had already submitted something that was addressed by the PR, it will be included.
+
+{Reactions}
+👍 
+
+[05/20/2022 6:25 PM] sockdrawermoney
+Correct 😦 I'm very sorry. This is an unusual circumstance and definitely something that we try to avoid.
+
+
+[05/20/2022 6:28 PM] sockdrawermoney
+I would say _do_ submit them TODAY and note that you had found them prior. We'll try to come up with a way to handle for folks who get them in today. 
+
+I'm going to ask folks to honor your fellow competitors and only submit those bugs today if you legitimately found them prior to seeing the PR.
+
+{Reactions}
+👍 (6) 
+
+[05/21/2022 12:05 PM] kamensec
+can we get a clear list of what was actually fixed? would save having to go through a diff and we can focus instead on the outstanding code
+
+
+[05/21/2022 12:05 PM] kamensec
+or like what the actual issues were that were submitted that lead to the changes
+
+
+[05/21/2022 1:58 PM] dmitriia
+It's all in PR 5 above
+
+
+[05/21/2022 6:56 PM] sockdrawermoney
+no, this is more of a one-off circumstance
+
+
+[05/21/2022 6:58 PM] sockdrawermoney
+@0xMaha now that we've passed the 'today' I mentioned above, if you want to share the details of the specific findings addressed by the PR here or in the comments on the PR , that would be useful for folks who are reviewing the changes.
+
+{Reactions}
+♥️ 
+
+[05/21/2022 7:19 PM] kamensec
+Hey I deleted my last comment came off a little more passive aggressive than intended… was meant a little more humorously
+
+
+[05/21/2022 7:20 PM] kamensec
+Awesome that’s perfect thanks @🧦 sockdrawer | C4
+
+
+[05/21/2022 7:20 PM] sockdrawermoney
+haha no problem XD I should've known better!
+
+
+[05/21/2022 10:35 PM] .laezo
+are there tests for the convex-platform contracts?
+
+
+[05/22/2022 8:04 PM] 0xmaha
+All the changes that were made should be covered in the tests in aura-contracts repo 🙂
+
+{Reactions}
+👍 
+
+[05/23/2022 6:09 PM] acegawd
+Anybody knows how this can be resolved?
+
+{Attachments}
+Code4rena - ARCHIVE-Q2-2022 - ☑aura-may11 [973316471793025054].txt_Files/Screenshot_20220523_113543_com.android.chr-1C166.jpg
+
+
+[05/25/2022 12:47 AM] kartoonjoy
+Hey @🐺wardens, just a reminder that this contest ends in about 12 hours. Please submit all your findings for Aura before that time!
+
+{Reactions}
+C4Keycap (6) 
+
+[05/25/2022 1:02 PM] C4
+**🚨 CONTEST ALERT**
+
+@🐺wardens The Aura Finance contest is now closed! Huge thanks to everyone who participated 🔍, whether you submitted a finding or not.
+
+What's next: the Aura Finance team will review the findings over the next couple of days, and then we'll pass them off to the judge. Keep an eye on #📢announcements for regular updates on how the contest is progressing through awarding 🤑🏆, judging 🧑‍⚖️ and reporting 📜. Feel free to ping a gardener if you have questions along the way!
+
+{Reactions}
+🙌 (10) 
+
+[06/23/2022 8:54 PM] csanuragjain
+Any update on results?
+
+
+[06/23/2022 9:01 PM] cloudellie
+Hoping to have the judge's decisions by Monday and over to sponsors & Certified+ wardens for post-judging QA 🤞 
+Judging was unfortunately delayed by some unavoidable world events, so big shout-out to our judge for persisting in the face of adversity.
+
+{Reactions}
+thankyou (5) hi5 (2) 💜 (3) 🙏 (3) empathy (3) 
+
+[07/14/2022 1:52 PM] itsmetechjay
+🤑 🎉  Awards for **Aura Finance**, part 1:
+
+$31,123.56 USDC » @csanuragjain 
+$18,051.26 USDC » @cccz 
+$10,751.20 USDC » @IllIllI 
+$7,523.71 USDC » @0xjuicer 
+$6,889.31 USDC » @hyh 
+$6,739.60 USDC » @kirk-baird 
+$5,454.24 USDC » @catchup 
+$5,423.98 USDC » QuantumBrief (@Pedroais, @GermanKuber, @fatherOfBlocks)
+$5,423.51 USDC » WatchPug (@Ming | WATCHPUG, @JtP | WATCHPUG)
+$5,338.80 USDC » @kenzo 
+$5,338.63 USDC » @Chom 
+$5,338.63 USDC » @Kumpa 
+$5,188.76 USDC » @0x52 
+$5,188.76 USDC » @0xsomeone 
+$5,188.76 USDC » @xiaoming90 
+$1,920.92 USDC » MaratCerby
+$1,879.88 USDC » BowTiedWardens @BowTiedHeron, @BowTiedPickle, @BowTiedFirefox, @Dravee, @m4rio.eth)
+$945.65 USDC » @Aits 
+$682.04 USDC » @lucyoa 
+$550.80 USDC » @TerrierLover 
+$482.35 USDC » @0xkatana 
+$379.34 USDC » SmartSek (@hake | SmartSek, @Django | Saloon Finance)
+$334.85 USDC » @DefSec 
+$311.43 USDC » @robee 
+$301.04 USDC » @0xNazgul 
+$299.85 USDC » @anon 
+$292.94 USDC » @joestakey 
+$272.60 USDC » @c3phas 
+$253.64 USDC » Hawkeye (@0xwags,@0xmint)
+$247.36 USDC » @Tomio 
+$247.07 USDC » @hansfriese 
+$247.07 USDC » @kenta 
+$245.13 USDC » @MiloTruck 
+$244.97 USDC » CertoraInc (@egjlmn1, @Ori Dabush,@ItayG,@shakedwinder )
+$244.97 USDC » @sashik_eth 
+$242.61 USDC » @_Adam 
+$242.61 USDC » @fatherOfBlocks 
+$241.42 USDC » @0x1f8b 
+$241.16 USDC » @Funen 
+$234.75 USDC » 0xf15ers(@remora0,@twojoy)
+$234.75 USDC » @Kaiziron 
+$234.58 USDC » @delfin454000 
+$234.58 USDC » @simon135 
+$234.58 USDC » @Waze 
+$233.39 USDC » @ellahi 
+$233.37 USDC » mics
+$233.30 USDC » @FSchmoede 
+$233.29 USDC » @bobirichman7542 
+$233.29 USDC » cthulhu_cult (@badbird, seanamani)
+$233.29 USDC » @unforgiven 
+$233.28 USDC » @Ruhum 
+$233.28 USDC » @Tadashi 
+$233.20 USDC » @thinklab 
+$233.20 USDC » @Sloth 
+$233.20 USDC » @sach1r0 
+$233.14 USDC » @sikorico 
+$233.14 USDC » @Noam Yakov 
+$233.14 USDC » @samruna 
+$233.12 USDC » GimelSec (@rayn | GimelSec, @sces60107 | GimelSec)
+$233.12 USDC » @JC
+$233.12 USDC » @Kalpita🤖 
+$233.12 USDC » @SooYa 
+$233.12 USDC » @z3s 
+$233.12 USDC » @jayjonah8 
+$233.12 USDC » @zmj 
+$216.33 USDC » @tintin
+
+{Reactions}
+🎉 (11) 
+
+[07/14/2022 1:53 PM] itsmetechjay
+🤑 🎉  Awards for **Aura Finance**, part 2:
+
+$151.97 USDC » @Bernd 
+$151.97 USDC » @cryptphi 
+$151.97 USDC » Nethermind ( @mauricio1802, @dic0de, @dxdv, @Mr Unome , @visgoth , @thomaspanf , @kaliberpoziomka8552 , @CalabashSquash, @Parth, @DestroyerSrt)
+$151.97 USDC » @PPrieditis 
+$151.97 USDC » @Rolezn 
+$151.97 USDC » @sorryNotsorry 
+$150.03 USDC » @BouSalman 
+$150.03 USDC » @p_crypt0 
+$150.03 USDC » @100proof 
+$149.87 USDC » @242 
+$149.87 USDC » @0xNineDec 
+$149.87 USDC » @Fufanuu 
+$149.87 USDC » @ch13fd357r0y3r 
+$149.87 USDC » @JDeryl.cap 
+$149.87 USDC » hubble (@ksk2345, @shri4net)
+$149.87 USDC » @Cityscape 
+$142.92 USDC » @0xKitsune 
+$95.10 USDC » @UnusualTurtle 
+$83.52 USDC » @rfa 
+$83.33 USDC » @0v3rf10w 
+$83.33 USDC » DavidGialdi
+$83.27 USDC » @Fitraldys 
+$83.27 USDC » @Randyyy 
+$83.25 USDC » @antonttc 
+$83.25 USDC » @minhquanym 
+$83.25 USDC » @marcoatpaladin 
+$83.25 USDC » @orion 
+
+🏁 Findings summary 
+---------------------------
+High risk findings: 1 total, 1 unique
+Med risk findings: 30 total, 22 unique
+Gas optimization reports: 66
+QA reports: 76
+
+Awards will be distributed on Polygon within the next 1-2 weeks.  Congratulations all!  💸 💸 💸
+
+{Reactions}
+🎉 (16) 
+
+[09/25/2022 3:39 PM] 0xsorrynotsorry
+Were the rewards distributed for this?
+
+
+[09/26/2022 10:35 AM] cloudellie
+According to our records, the awards were sent July 23.
+
+{Reactions}
+🙏 
+
+==============================================================
+Exported 68 message(s)
+==============================================================
