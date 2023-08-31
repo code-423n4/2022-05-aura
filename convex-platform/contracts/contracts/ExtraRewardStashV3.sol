@@ -139,6 +139,8 @@ contract ExtraRewardStashV3 {
     function setExtraReward(address _token) external{
         //owner of booster can set extra rewards
         require(IDeposit(operator).owner() == msg.sender, "!owner");
+        require(tokenList.length < 4, "too many rewards");
+
         setToken(_token);
     }
 
